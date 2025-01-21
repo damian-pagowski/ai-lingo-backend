@@ -1,0 +1,52 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+
+# SQLite database and related files
+db/*.db
+db/*.db-journal
+db/*.sqlite
+db/*.sqlite3
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Editor and OS-specific files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Test coverage and reports
+coverage/
+nyc_output/
+*.lcov
+
+# Debugging artifacts
+*.pid
+*.seed
+
+# Fastify cache and temporary files
+.fastify*
+
+# Jest testing artifacts
+jest-cache/
+jest-config/
+jest-test-results.json
+
+# Miscellaneous
+*.bak
+*.tmp
