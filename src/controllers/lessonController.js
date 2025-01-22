@@ -12,14 +12,19 @@ const createLesson = async (request, reply) => {
 };
 
 const getLessons = async (request, reply) => {
-    const { page = 1, limit = 10, difficulty } = request.query;
+    const { page = 1, limit = 10, difficulty, sort = 'created_at', order = 'desc' } = request.query;
 
     try {
-        let query = db('lessons').select('*').limit(limit).offset((page - 1) * limit);
+        let query = db('lessons').select('*');
 
         if (difficulty) {
             query = query.where('difficulty', difficulty);
         }
+
+        const offset = (page - 1) * limit;
+        query = query.limit(limit).offset(offset);
+
+        query = query.orderBy(sort, order);
 
         const lessons = await query;
         reply.send(lessons);
