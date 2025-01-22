@@ -12,8 +12,16 @@ const createLesson = async (request, reply) => {
 };
 
 const getLessons = async (request, reply) => {
+    const { page = 1, limit = 10, difficulty } = request.query;
+
     try {
-        const lessons = await db('lessons').select('*');
+        let query = db('lessons').select('*').limit(limit).offset((page - 1) * limit);
+
+        if (difficulty) {
+            query = query.where('difficulty', difficulty);
+        }
+
+        const lessons = await query;
         reply.send(lessons);
     } catch (err) {
         reply.status(500).send({ error: 'Failed to fetch lessons' });

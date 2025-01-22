@@ -2,29 +2,19 @@ const fastify = require('fastify')({ logger: true });
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const lessonRoutes = require('./routes/lessonRoutes');
+const progressRoutes = require('./routes/progressRoutes');
+const authPlugin = require('./plugins/authPlugin');
 
-
-fastify.register(require('fastify-jwt'), {
-    secret: process.env.JWT_SECRET || 'supersecretkey'
-});
-
-fastify.decorate("authenticate", async (request, reply) => {
-    try {
-        await request.jwtVerify();
-    } catch (err) {
-        reply.status(401).send({ error: 'Unauthorized' });
-    }
-});
-
-fastify.get('/protected', { preHandler: [fastify.authenticate] }, async (request, reply) => {
-    return { message: "You have access!" };
-});
+// plugins
+fastify.register(authPlugin);
 
 // routes
 fastify.register(userRoutes);
 fastify.register(authRoutes)
 fastify.register(lessonRoutes);
+fastify.register(progressRoutes);
 
+// start server
 fastify.listen({ port: 3000 }, (err) => {
   if (err) {
     fastify.log.error(err);
