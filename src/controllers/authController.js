@@ -21,7 +21,12 @@ const loginUser = async (request, reply) => {
         return reply.status(401).send({ error: 'Invalid credentials' });
     }
 
-    const token = request.server.jwt.sign({ id: user.id, email: user.email });
+    const token = request.jwt.sign({
+        id: user.id,
+        email: user.email,
+        role: user.role  
+    });
+
     reply.send({ token });
 };
 
