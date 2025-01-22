@@ -24,7 +24,25 @@ const getUsers = async (request, reply) => {
     }
 };
 
+const updateUserRole = async (request, reply) => {
+    const { id } = request.params;
+    const { role } = request.body;
+
+    try {
+        const updatedRows = await db('users').where({ id }).update({ role });
+
+        if (!updatedRows) {
+            return reply.status(404).send({ error: 'User not found' });
+        }
+
+        reply.send({ id, role });
+    } catch (err) {
+        reply.status(500).send({ error: 'Failed to update user role' });
+    }
+};
+
 module.exports = {
     createUser,
-    getUsers
+    getUsers,
+    updateUserRole
 };

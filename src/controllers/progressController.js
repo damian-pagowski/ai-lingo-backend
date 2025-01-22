@@ -57,7 +57,18 @@ const deleteProgress = async (request, reply) => {
     }
 };
 
+const getProgressByLesson = async (request, reply) => {
+    const { lessonId } = request.params;
+    try {
+        const progress = await db('progress').where({ lesson_id: lessonId });
+        reply.send(progress);
+    } catch (err) {
+        reply.status(500).send({ error: 'Failed to retrieve lesson progress' });
+    }
+};
+
 module.exports = {
+    getProgressByLesson,
     addProgress,
     getProgressByUser,
     updateProgress,
