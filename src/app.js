@@ -4,9 +4,11 @@ const authRoutes = require('./routes/authRoutes');
 const lessonRoutes = require('./routes/lessonRoutes');
 const progressRoutes = require('./routes/progressRoutes');
 const authPlugin = require('./plugins/authPlugin');
+const corsPlugin =  require('./plugins/cors');
 
 // plugins
 fastify.register(authPlugin);
+fastify.register(corsPlugin);
 
 // routes
 fastify.register(userRoutes);
