@@ -33,19 +33,27 @@ const getLessons = async (request, reply) => {
     }
 };
 
-const getLessonById = async (request, reply) => {
-    const { id } = request.params;
-
+const getLessonById = async (req, reply) => {
+    const { id } = req.params;
+  
     try {
-        const lesson = await db('lessons').where({ id }).first();
-        if (!lesson) {
-            return reply.status(404).send({ error: 'Lesson not found' });
-        }
-        reply.send(lesson);
+      const lesson = await db('lessons').where({ id }).first();
+  
+      if (!lesson) {
+        return reply.status(404).send({ error: 'Lesson not found' });
+      }
+  
+      // Fetch exercises associated with the lesson
+      const exercises = await db('exercises')
+        .join('lesson_exercises', 'exercises.id', '=', 'lesson_exercises.exercise_id')
+        .where('lesson_exercises.lesson_id', id)
+        .select('exercises.id', 'exercises.question', 'exercises.type', 'exercises.options', 'exercises.correct_answer');
+  
+      reply.send({ ...lesson, exercises });
     } catch (err) {
-        reply.status(500).send({ error: 'Failed to fetch lesson' });
+      reply.status(500).send({ error: 'Failed to fetch lesson' });
     }
-};
+  };
 
 const updateLesson = async (request, reply) => {
     const { id } = request.params;
