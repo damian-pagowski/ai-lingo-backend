@@ -6,11 +6,17 @@ module.exports = fp(async (fastify, opts) => {
         secret: process.env.JWT_SECRET || 'supersecretkey'
     });
 
-    fastify.decorate("authenticate", async (request, reply) => {
+    fastify.decorate("authenticate", async (req, reply) => {
         try {
-            await request.jwtVerify();
-        } catch (err) {
-            reply.status(401).send({ error: 'Unauthorized' });
-        }
+            const authHeader = req.headers.authorization;
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+              reply.status(401).send({ message: 'Invalid token' });
+            }
+            const token = authHeader.split(' ')[1];
+            const decoded = fastify.jwt.verify(token);
+            req.user = decoded;
+          } catch (err) {
+            reply.status(401).send({ message: 'Invalid or expired token' });
+          }
     });
 });

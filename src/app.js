@@ -3,6 +3,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const lessonRoutes = require('./routes/lessonRoutes');
 const progressRoutes = require('./routes/progressRoutes');
+const userProfileRoutes = require('./routes/userProfileRoutes');
 const authPlugin = require('./plugins/authPlugin');
 const corsPlugin =  require('./plugins/cors');
 
@@ -15,6 +16,7 @@ fastify.register(userRoutes);
 fastify.register(authRoutes)
 fastify.register(lessonRoutes);
 fastify.register(progressRoutes);
+fastify.register(userProfileRoutes);
 
 // start server
 fastify.listen({ port: 3000 }, (err) => {

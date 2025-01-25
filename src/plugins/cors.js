@@ -4,7 +4,7 @@ const cors =require('@fastify/cors');
 module.exports = fp(async (fastify, opts) => {
   fastify.register(cors, {
     origin: (origin, cb) => {
-      const allowedOrigins = ['http://localhost:5173'];
+      const allowedOrigins = ['http://localhost:5173']; //TODO use variable maybe
       if (!origin || allowedOrigins.includes(origin)) {
         cb(null, true);
         return;
