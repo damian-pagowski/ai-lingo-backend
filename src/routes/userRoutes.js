@@ -1,6 +1,10 @@
 const { userSchema } = require("../schemas/userSchema");
 const validateRequest = require("../middleware/validateRequest");
-const { createUser, getUsers } = require("../controllers/userController");
+const {
+  createUser,
+  getUsers,
+  updateOwnProfile,
+} = require("../controllers/userController");
 const authorizeRoles = require("../middleware/authorizeRoles");
 const { updateUserRole } = require("../controllers/userController");
 
@@ -31,5 +35,10 @@ module.exports = async function (fastify) {
       ],
     },
     updateUserRole
+  );
+  fastify.put(
+    "/users/profile",
+    { preHandler: fastify.authenticate },
+    updateOwnProfile
   );
 };
