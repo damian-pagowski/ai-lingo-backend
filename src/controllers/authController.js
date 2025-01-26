@@ -1,5 +1,6 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
+const { DatabaseError, UnauthorizedError } = require('../errors/customErrors');
 
 const registerUser = async (request, reply) => {
     const { name, email, password } = request.body;
@@ -9,7 +10,7 @@ const registerUser = async (request, reply) => {
         const [id] = await db('users').insert({ name, email, password: hashedPassword });
         reply.send({ id, name, email });
     } catch (err) {
-        reply.status(500).send({ error: 'Failed to register user' });
+        throw new DatabaseError('Failed to register user', err.message);
     }
 };
 
@@ -18,7 +19,7 @@ const loginUser = async (request, reply) => {
     const user = await db('users').where({ email }).first();
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-        return reply.status(401).send({ error: 'Invalid credentials' });
+        throw new UnauthorizedError('Invalid credentials');
     }
 
     const token = request.server.jwt.sign({

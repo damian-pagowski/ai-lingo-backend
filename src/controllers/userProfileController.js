@@ -1,4 +1,5 @@
 const db = require('../db');
+const { NotFoundError, ValidationError, DatabaseError } = require('../errors/customErrors');
 
 const getUserProfile = async (request, reply) => {
     try {
@@ -10,26 +11,25 @@ const getUserProfile = async (request, reply) => {
             .first();
 
         if (!user) {
-            return reply.status(404).send({ error: 'User not found' });
+            throw new NotFoundError('User not found', { userId });
         }
 
+        // Fetch user profile
         const userProfile = await db('user_profiles')
             .select('course_name', 'level', 'progress', 'streak', 'current_lesson_id')
             .where({ user_id: userId })
             .first();
 
         if (!userProfile) {
-            return reply.status(404).send({ error: 'User profile not found' });
+            throw new NotFoundError('User profile not found', { userId });
         }
 
-        const mergedProfile = {
-            ...user,
-            ...userProfile
-        };
-
-        reply.send(mergedProfile);
+        reply.send({ ...user, ...userProfile });
     } catch (err) {
-        reply.status(500).send({ error: 'Failed to fetch user profile' });
+        if (err instanceof NotFoundError) {
+            throw err;
+        }
+        throw new DatabaseError('Failed to fetch user profile', err.message);
     }
 };
 
@@ -38,12 +38,16 @@ const createUserProfile = async (request, reply) => {
         const userId = request.user.id;
         const { course_name, level, progress, streak, current_lesson_id } = request.body;
 
+        if (!course_name || !level || !current_lesson_id) {
+            throw new ValidationError('Missing required fields', { course_name, level, current_lesson_id });
+        }
+
         const existingProfile = await db('user_profiles')
             .where({ user_id: userId })
             .first();
 
         if (existingProfile) {
-            return reply.status(400).send({ error: 'User profile already exists' });
+            throw new ValidationError('User profile already exists', { userId });
         }
 
         await db('user_profiles').insert({
@@ -57,7 +61,10 @@ const createUserProfile = async (request, reply) => {
 
         reply.status(201).send({ message: 'User profile created successfully' });
     } catch (err) {
-        reply.status(500).send({ error: 'Failed to create user profile' });
+        if (err instanceof ValidationError) {
+            throw err;
+        }
+        throw new DatabaseError('Failed to create user profile', err.message);
     }
 };
 
@@ -72,7 +79,7 @@ const updateUserProfile = async (request, reply) => {
             .first();
 
         if (!existingProfile) {
-            return reply.status(404).send({ error: 'User profile not found' });
+            throw new NotFoundError('User profile not found', { userId });
         }
 
         // Update the user profile
@@ -89,7 +96,10 @@ const updateUserProfile = async (request, reply) => {
 
         reply.status(200).send({ message: 'User profile updated successfully' });
     } catch (err) {
-        reply.status(500).send({ error: 'Failed to update user profile' });
+        if (err instanceof NotFoundError) {
+            throw err;
+        }
+        throw new DatabaseError('Failed to update user profile', err.message);
     }
 };
 

@@ -1,26 +1,42 @@
 const db = require("../db");
+const {
+  ValidationError,
+  NotFoundError,
+  DatabaseError,
+} = require("../errors/customErrors");
 
 const createUser = async (request, reply) => {
   const { name, email } = request.body;
+
   try {
+    if (!name || !email) {
+      throw new ValidationError("Name and email are required", { name, email });
+    }
+
     const [id] = await db("users").insert({ name, email });
-    const newUser = {
-      id,
-      name,
-      email,
-    };
+
+    const newUser = { id, name, email };
     reply.send(newUser);
   } catch (err) {
-    reply.status(500).send({ error: "Failed to add user" });
+    if (err instanceof ValidationError) {
+      throw err;
+    }
+    throw new DatabaseError("Failed to add user", err.message);
   }
 };
 
 const getUsers = async (request, reply) => {
   try {
-    const users = await db("users").select("*");
+    const users = await db("users").select(
+      "id",
+      "name",
+      "email",
+      "role",
+      "created_at"
+    );
     reply.send(users);
   } catch (err) {
-    reply.status(500).send({ error: "Failed to fetch users" });
+    throw new DatabaseError("Failed to fetch users", err.message);
   }
 };
 
@@ -29,15 +45,22 @@ const updateUserRole = async (request, reply) => {
   const { role } = request.body;
 
   try {
+    if (!role) {
+      throw new ValidationError("Role is required");
+    }
+
     const updatedRows = await db("users").where({ id }).update({ role });
 
     if (!updatedRows) {
-      return reply.status(404).send({ error: "User not found" });
+      throw new NotFoundError("User not found", { userId: id });
     }
 
     reply.send({ id, role });
   } catch (err) {
-    reply.status(500).send({ error: "Failed to update user role" });
+    if (err instanceof ValidationError || err instanceof NotFoundError) {
+      throw err;
+    }
+    throw new DatabaseError("Failed to update user role", err.message);
   }
 };
 
@@ -47,7 +70,7 @@ const updateOwnProfile = async (request, reply) => {
     const { email, name } = request.body;
 
     if (!email || !name) {
-      return reply.status(400).send({ error: "Email and name are required" });
+      throw new ValidationError("Email and name are required", { email, name });
     }
 
     const existingUser = await db("users")
@@ -56,18 +79,24 @@ const updateOwnProfile = async (request, reply) => {
       .first();
 
     if (existingUser) {
-      return reply.status(400).send({ error: "Email is already taken" });
+      throw new ValidationError("Email is already taken", { email });
     }
 
-    await db("users").where({ id: userId }).update({
+    const updatedRows = await db("users").where({ id: userId }).update({
       email,
       name,
     });
 
+    if (!updatedRows) {
+      throw new NotFoundError("User not found", { userId });
+    }
+
     reply.status(200).send({ message: "Profile updated successfully" });
   } catch (err) {
-    console.error("Error updating profile:", err);
-    reply.status(500).send({ error: "Failed to update profile" });
+    if (err instanceof ValidationError || err instanceof NotFoundError) {
+      throw err;
+    }
+    throw new DatabaseError("Failed to update profile", err.message);
   }
 };
 
