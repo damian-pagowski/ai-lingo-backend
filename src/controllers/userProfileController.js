@@ -13,8 +13,6 @@ const getUserProfile = async (request, reply) => {
         if (!user) {
             throw new NotFoundError('User not found', { userId });
         }
-
-        // Fetch user profile
         const userProfile = await db('user_profiles')
             .select('course_name', 'level', 'progress', 'streak', 'current_lesson_id')
             .where({ user_id: userId })
@@ -23,7 +21,6 @@ const getUserProfile = async (request, reply) => {
         if (!userProfile) {
             throw new NotFoundError('User profile not found', { userId });
         }
-
         reply.send({ ...user, ...userProfile });
     } catch (err) {
         if (err instanceof NotFoundError) {
@@ -72,17 +69,12 @@ const updateUserProfile = async (request, reply) => {
     try {
         const userId = request.user.id;
         const { course_name, level, progress, streak, current_lesson_id } = request.body;
-
-        // Check if profile exists
         const existingProfile = await db('user_profiles')
             .where({ user_id: userId })
             .first();
-
         if (!existingProfile) {
             throw new NotFoundError('User profile not found', { userId });
         }
-
-        // Update the user profile
         await db('user_profiles')
             .where({ user_id: userId })
             .update({
