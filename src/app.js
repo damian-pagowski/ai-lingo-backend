@@ -29,5 +29,5 @@ fastify.listen({ port: 3000 }, (err) => {
     fastify.log.error(err);
     process.exit(1);
   }
-  console.log('Server running on http://localhost:3000');
+  fastify.log.info('Server running on http://localhost:3000');
 });

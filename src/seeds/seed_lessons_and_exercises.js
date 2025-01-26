@@ -38,8 +38,8 @@ exports.seed = async function (knex) {
     .returning('id');
 
   // Relate lessons to exercises (assign unique exercises to each lesson)
-  for (let lessonId of lessonIds) {
-    for (let exerciseId of exerciseIds) {
+  for (const lessonId of lessonIds) {
+    for (const exerciseId of exerciseIds) {
       await knex('lesson_exercises').insert({
         lesson_id: lessonId.id,
         exercise_id: exerciseId.id,
