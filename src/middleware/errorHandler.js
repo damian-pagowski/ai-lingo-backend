@@ -14,7 +14,7 @@ const errorHandler = (error, request, reply) => {
       details: error.validation.map((err) => err.message),
     });
   } else {
-    console.error("Unexpected Error:", error);
+    request.log.error("Unexpected Error:", error);
     reply.status(500).send({
       error: true,
       message: error.message,

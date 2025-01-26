@@ -1,7 +1,7 @@
 const { UnauthorizedError, ForbiddenError } = require('../errors/customErrors');
 
 module.exports = (roles) => {
-    return async (request, reply) => {
+    return async (request, _reply) => {
         try {
             await request.jwtVerify();
             if (!request.user) {

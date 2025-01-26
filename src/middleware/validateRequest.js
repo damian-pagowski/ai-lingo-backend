@@ -1,7 +1,7 @@
 const { ValidationError } = require('../errors/customErrors');
 
 const validateRequest = (schema) => {
-    return async (request, reply) => {
+    return async (request, _reply) => {
         const { error } = schema.validate(request.body, { abortEarly: false });
 
         if (error) {
