@@ -1,9 +1,5 @@
 const db = require("../db");
-const {
-  ValidationError,
-  NotFoundError,
-  DatabaseError,
-} = require("../errors/customErrors");
+const { NotFoundError, DatabaseError } = require("../errors/customErrors");
 const mapLevel = (response) => {
   switch (response) {
     case "Nothing, just starting and have no contact with the language.":
@@ -42,6 +38,13 @@ const mapDomains = (domains) => {
   return domains.map((domain) => domainMappings[domain] || domain);
 };
 
+// Generate course name based on preferences
+const generateCourseName = (level, goals) => {
+  const levelText = level.charAt(0).toUpperCase() + level.slice(1);
+  const goalsText = goals.map((goal) => goal.replace("_", " ")).join(" and ");
+  return `${levelText} course for ${goalsText}`;
+};
+
 const saveUserPreferences = async (request, reply) => {
   try {
     const userId = request.user.id;
@@ -51,11 +54,16 @@ const saveUserPreferences = async (request, reply) => {
     const learning_goal = mapGoals(goals);
     const focus_areas = mapDomains(domains);
 
+    // Generate course name
+    const course_name = generateCourseName(current_level, learning_goal);
+
+    // Check if preferences already exist
     const existingPreferences = await db("user_preferences")
       .where({ user_id: userId })
       .first();
 
     if (existingPreferences) {
+      // Update existing preferences
       await db("user_preferences")
         .where({ user_id: userId })
         .update({
@@ -64,7 +72,17 @@ const saveUserPreferences = async (request, reply) => {
           focus_areas: JSON.stringify(focus_areas),
           updated_at: new Date(),
         });
-      reply.status(200).send({ message: "Preferences updated successfully" });
+
+      // Update user profile
+      await db("user_profiles").where({ user_id: userId }).update({
+        course_name,
+        level: current_level,
+        updated_at: new Date(),
+      });
+
+      reply
+        .status(200)
+        .send({ message: "Preferences and profile updated successfully" });
     } else {
       await db("user_preferences").insert({
         user_id: userId,
@@ -72,13 +90,26 @@ const saveUserPreferences = async (request, reply) => {
         learning_goal: JSON.stringify(learning_goal),
         focus_areas: JSON.stringify(focus_areas),
       });
-      reply.status(201).send({ message: "Preferences saved successfully" });
+      await db("user_profiles").insert({
+        user_id: userId,
+        course_name,
+        level: current_level,
+        progress: "0/10",
+        streak: 0,
+        current_lesson_id: 0,
+        created_at: new Date(),
+        updated_at: new Date(),
+      });
+
+      reply
+        .status(201)
+        .send({ message: "Preferences and profile saved successfully" });
     }
   } catch (err) {
-    if (err instanceof ValidationError) {
-      throw err;
-    }
-    throw new DatabaseError("Failed to save preferences", err.message);
+    throw new DatabaseError(
+      "Failed to save preferences and update profile",
+      err.message
+    );
   }
 };
 
@@ -91,11 +122,7 @@ const getUserPreferences = async (request, reply) => {
     if (!preferences) {
       throw new NotFoundError("User preferences not found", { userId });
     }
-    reply.send({
-      ...preferences,
-      goals: JSON.parse(preferences.goals),
-      domains: JSON.parse(preferences.domains),
-    });
+    reply.send({preferences});
   } catch (err) {
     if (err instanceof NotFoundError) {
       throw err;
