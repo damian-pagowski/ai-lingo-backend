@@ -7,6 +7,7 @@ const userProfileRoutes = require('./routes/userProfileRoutes');
 const authPlugin = require('./plugins/authPlugin');
 const corsPlugin =  require('./plugins/cors');
 const errorHandler = require('./middleware/errorHandler');
+const userPreferencesRoutes = require('./routes/userPreferencesRoutes');
 
 // plugins
 fastify.register(authPlugin);
@@ -18,6 +19,7 @@ fastify.register(authRoutes)
 fastify.register(lessonRoutes);
 fastify.register(progressRoutes);
 fastify.register(userProfileRoutes);
+fastify.register(userPreferencesRoutes);
 
 // middlewares
 fastify.setErrorHandler(errorHandler);
