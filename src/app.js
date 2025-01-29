@@ -8,7 +8,8 @@ const authPlugin = require('./plugins/authPlugin');
 const corsPlugin =  require('./plugins/cors');
 const errorHandler = require('./middleware/errorHandler');
 const userPreferencesRoutes = require('./routes/userPreferencesRoutes');
-
+const generateLessonsRoutes = require("./routes/generateLessonsRoutes");
+require('dotenv').config();
 // plugins
 fastify.register(authPlugin);
 fastify.register(corsPlugin);
@@ -20,6 +21,7 @@ fastify.register(lessonRoutes);
 fastify.register(progressRoutes);
 fastify.register(userProfileRoutes);
 fastify.register(userPreferencesRoutes);
+fastify.register(generateLessonsRoutes);
 
 // middlewares
 fastify.setErrorHandler(errorHandler);
@@ -32,4 +34,5 @@ fastify.listen({ port: 3000 }, (err) => {
     process.exit(1);
   }
   fastify.log.info('Server running on http://localhost:3000');
+
 });

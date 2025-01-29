@@ -41,28 +41,23 @@ const getLessons = async (request, reply) => {
 
 const getLessonById = async (req, reply) => {
   const { id } = req.params;
+
   try {
     const lesson = await db("lessons").where({ id }).first();
+
     if (!lesson) {
-      return reply.status(404).send({ error: "Lesson not found" });
+      throw new NotFoundError("Lesson not found", { lessonId: id });
     }
+    
     const exercises = await db("exercises")
-      .join(
-        "lesson_exercises",
-        "exercises.id",
-        "=",
-        "lesson_exercises.exercise_id"
-      )
-      .where("lesson_exercises.lesson_id", id)
-      .select(
-        "exercises.id",
-        "exercises.question",
-        "exercises.type",
-        "exercises.options",
-        "exercises.correct_answer"
-      );
+      .where({ lesson_id: id })
+      .select("id", "question", "type", "options", "correct_answer");
+
     reply.send({ ...lesson, exercises });
   } catch (err) {
+    if (err instanceof NotFoundError) {
+      throw err;
+    }
     throw new DatabaseError("Failed to fetch lesson", err.message);
   }
 };

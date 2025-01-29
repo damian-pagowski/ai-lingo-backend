@@ -26,4 +26,18 @@ export default [
   },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
+
+  // Jest-specific overrides for test files
+  {
+    files: ["src/tests/**/*.test.js"],
+    languageOptions: {
+      globals: {
+        ...globals.jest, // Enables Jest globals like `describe`, `test`
+      },
+    },
+    rules: {
+      "no-undef": "off", // Avoid noise from Jest functions
+      "no-console": "off", // Allow `console.log` in tests
+    },
+  },
 ];

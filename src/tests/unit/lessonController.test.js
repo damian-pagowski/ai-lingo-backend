@@ -171,9 +171,9 @@ describe("Lesson Controller", () => {
         where: jest.fn().mockReturnThis(),
         first: jest.fn().mockResolvedValue(null),
       });
-      await getLessonById(request, reply);
-      expect(reply.status).toHaveBeenCalledWith(404);
-      expect(reply.send).toHaveBeenCalledWith({ error: "Lesson not found" });
+      await expect(getLessonById(request, reply)).rejects.toThrow(
+        NotFoundError
+      );
     });
 
     it("should throw a DatabaseError if db.where fails", async () => {
