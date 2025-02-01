@@ -9,6 +9,9 @@ const corsPlugin =  require('./plugins/cors');
 const errorHandler = require('./middleware/errorHandler');
 const userPreferencesRoutes = require('./routes/userPreferencesRoutes');
 const generateLessonsRoutes = require("./routes/generateLessonsRoutes");
+const submitAnswersRoutes = require('./routes/submitAnswersRoutes');
+
+
 require('dotenv').config();
 // plugins
 fastify.register(authPlugin);
@@ -22,6 +25,7 @@ fastify.register(progressRoutes);
 fastify.register(userProfileRoutes);
 fastify.register(userPreferencesRoutes);
 fastify.register(generateLessonsRoutes);
+fastify.register(submitAnswersRoutes);
 
 // middlewares
 fastify.setErrorHandler(errorHandler);
