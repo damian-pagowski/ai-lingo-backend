@@ -16,7 +16,7 @@ module.exports = async function (fastify) {
     addProgress
   );
   fastify.get(
-    "/progress/:id",
+    "/progress",
     { preHandler: [fastify.authenticate] },
     getProgressByUser
   );

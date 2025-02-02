@@ -50,8 +50,14 @@ const getLessonById = async (req, reply) => {
     }
     
     const exercises = await db("exercises")
-      .where({ lesson_id: id })
-      .select("id", "question", "type", "options", "correct_answer");
+    .join("lesson_exercises", "exercises.id", "lesson_exercises.exercise_id")
+    .where("lesson_exercises.lesson_id", id)
+    .select("exercises.id", "exercises.question", "exercises.type", "exercises.options", "exercises.correct_answer");
+
+    
+    // const exercises = await db("exercises")
+    //   .where({ lesson_id: id })
+    //   .select("id", "question", "type", "options", "correct_answer");
 
     reply.send({ ...lesson, exercises });
   } catch (err) {
