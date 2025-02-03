@@ -8,8 +8,6 @@ const authPlugin = require('./plugins/authPlugin');
 const corsPlugin =  require('./plugins/cors');
 const errorHandler = require('./middleware/errorHandler');
 const userPreferencesRoutes = require('./routes/userPreferencesRoutes');
-const generateLessonsRoutes = require("./routes/generateLessonsRoutes");
-const submitAnswersRoutes = require('./routes/submitAnswersRoutes');
 
 
 require('dotenv').config();
@@ -24,8 +22,6 @@ fastify.register(lessonRoutes);
 fastify.register(progressRoutes);
 fastify.register(userProfileRoutes);
 fastify.register(userPreferencesRoutes);
-fastify.register(generateLessonsRoutes);
-fastify.register(submitAnswersRoutes);
 
 // middlewares
 fastify.setErrorHandler(errorHandler);

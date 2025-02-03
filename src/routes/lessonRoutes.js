@@ -1,5 +1,6 @@
 const {
-  createLesson,
+  generateCustomLesson,
+  generateLessonsWithAI,
   getLessons,
   getLessonById,
   updateLesson,
@@ -16,17 +17,18 @@ module.exports = async function (fastify) {
     { preHandler: [fastify.authenticate] },
     getLessonById
   );
+
   fastify.post(
-    "/lessons",
-    {
-      preHandler: [
-        fastify.authenticate,
-        authorizeRoles(["admin"]),
-        validateRequest(lessonSchema),
-      ],
-    },
-    createLesson
+    "/create-lesson",
+    { preHandler: fastify.authenticate },
+    generateCustomLesson
   );
+  fastify.post(
+    "/create-ai-lesson",
+    { preHandler: fastify.authenticate },
+    generateLessonsWithAI
+  );
+
   fastify.put(
     "/lessons/:id",
     {

@@ -13,7 +13,8 @@ const getUserProfile = async (request, reply) => {
         if (!user) {
             throw new NotFoundError('User not found', { userId });
         }
-        const userProfile = await db('user_profiles')
+
+        let userProfile = await db('user_profiles')
             .select('course_name', 'level', 'progress', 'streak', 'current_lesson_id')
             .where({ user_id: userId })
             .first();
@@ -21,6 +22,19 @@ const getUserProfile = async (request, reply) => {
         if (!userProfile) {
             throw new NotFoundError('User profile not found', { userId });
         }
+
+        if (!userProfile.current_lesson_id) { 
+            const firstLesson = await db('lessons')
+                .select('id')
+                .where({ status: 'not_started' })
+                .orderBy('created_at', 'asc')
+                .first();
+
+            if (firstLesson) {
+                userProfile.current_lesson_id = firstLesson.id;
+            }
+        }
+
         reply.send({ ...user, ...userProfile });
     } catch (err) {
         if (err instanceof NotFoundError) {

@@ -54,16 +54,13 @@ const saveUserPreferences = async (request, reply) => {
     const learning_goal = mapGoals(goals);
     const focus_areas = mapDomains(domains);
 
-    // Generate course name
     const course_name = generateCourseName(current_level, learning_goal);
 
-    // Check if preferences already exist
     const existingPreferences = await db("user_preferences")
       .where({ user_id: userId })
       .first();
 
     if (existingPreferences) {
-      // Update existing preferences
       await db("user_preferences")
         .where({ user_id: userId })
         .update({
@@ -73,7 +70,6 @@ const saveUserPreferences = async (request, reply) => {
           updated_at: new Date(),
         });
 
-      // Update user profile
       await db("user_profiles").where({ user_id: userId }).update({
         course_name,
         level: current_level,

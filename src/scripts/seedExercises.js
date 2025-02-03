@@ -1,6 +1,6 @@
 const db = require("../db"); // Ensure this is the correct path to your database connection
 
-const exercises = [
+const easy = [
   {
     question: "Ich __________ in einem Büro.",
     type: "fill_in_the_blank",
@@ -92,7 +92,7 @@ const exercises = [
   {
     question: "Was brauchst du, um ein Flugticket zu kaufen?",
     type: "multiple_choice",
-    options: ["Reisepass", "Schlüssel", "Handtuch", "Buch"],
+    options: JSON.stringify(["Reisepass", "Schlüssel", "Handtuch", "Buch"]),
     correct_answer: "Reisepass",
     difficulty: 0.3,
     topic: "travel",
@@ -109,7 +109,7 @@ const exercises = [
     question:
       "Welches Dokument brauchst du für die Einreise in ein anderes Land?",
     type: "multiple_choice",
-    options: ["Fahrkarte", "Reisepass", "Geldschein", "Visitenkarte"],
+    options: JSON.stringify(["Fahrkarte", "Reisepass", "Geldschein", "Visitenkarte"]),
     correct_answer: "Reisepass",
     difficulty: 0.3,
     topic: "travel",
@@ -125,7 +125,7 @@ const exercises = [
   {
     question: "Wo gehst du hin, wenn du Lebensmittel kaufen möchtest?",
     type: "multiple_choice",
-    options: ["Supermarkt", "Apotheke", "Bibliothek", "Tankstelle"],
+    options: JSON.stringify(["Supermarkt", "Apotheke", "Bibliothek", "Tankstelle"]),
     correct_answer: "Supermarkt",
     difficulty: 0.1,
     topic: "general",
@@ -141,7 +141,7 @@ const exercises = [
   {
     question: "Welche dieser Städte liegt nicht in Deutschland?",
     type: "multiple_choice",
-    options: ["Berlin", "Hamburg", "Wien", "Köln"],
+    options: JSON.stringify(["Berlin", "Hamburg", "Wien", "Köln"]),
     correct_answer: "Wien",
     difficulty: 0.4,
     topic: "travel",
@@ -157,7 +157,7 @@ const exercises = [
   {
     question: "Welche Farbe hat die deutsche Fahne?",
     type: "multiple_choice",
-    options: ["Rot-Weiß-Blau", "Schwarz-Rot-Gold", "Grün-Gelb", "Blau-Weiß"],
+    options: JSON.stringify(["Rot-Weiß-Blau", "Schwarz-Rot-Gold", "Grün-Gelb", "Blau-Weiß"]),
     correct_answer: "Schwarz-Rot-Gold",
     difficulty: 0.1,
     topic: "general",
@@ -173,7 +173,7 @@ const exercises = [
   {
     question: "Welches dieser Wörter bedeutet 'Flughafen'?",
     type: "multiple_choice",
-    options: ["Bahnhof", "Flughafen", "Tankstelle", "Supermarkt"],
+    options: JSON.stringify(["Bahnhof", "Flughafen", "Tankstelle", "Supermarkt"]),
     correct_answer: "Flughafen",
     difficulty: 0.2,
     topic: "travel",
@@ -189,7 +189,7 @@ const exercises = [
   {
     question: "Was brauchst du, um in einem Hotel einzuchecken?",
     type: "multiple_choice",
-    options: ["Schlüssel", "Pass", "Buch", "Tasche"],
+    options: JSON.stringify(["Schlüssel", "Pass", "Buch", "Tasche"]),
     correct_answer: "Pass",
     difficulty: 0.3,
     topic: "travel",
@@ -205,7 +205,7 @@ const exercises = [
   {
     question: "Welches dieser Lebensmittel gehört nicht zum Frühstück?",
     type: "multiple_choice",
-    options: ["Brötchen", "Kaffee", "Bleistift", "Marmelade"],
+    options: JSON.stringify(["Brötchen", "Kaffee", "Bleistift", "Marmelade"]),
     correct_answer: "Bleistift",
     difficulty: 0.1,
     topic: "general",
@@ -221,7 +221,7 @@ const exercises = [
   {
     question: "Welches Land grenzt nicht an Deutschland?",
     type: "multiple_choice",
-    options: ["Österreich", "Schweiz", "Italien", "Frankreich"],
+    options: JSON.stringify(["Österreich", "Schweiz", "Italien", "Frankreich"]),
     correct_answer: "Italien",
     difficulty: 0.4,
     topic: "travel",
@@ -237,7 +237,7 @@ const exercises = [
   {
     question: "Welche dieser Städte ist die Hauptstadt von Deutschland?",
     type: "multiple_choice",
-    options: ["München", "Hamburg", "Berlin", "Frankfurt"],
+    options: JSON.stringify(["München", "Hamburg", "Berlin", "Frankfurt"]),
     correct_answer: "Berlin",
     difficulty: 0.1,
     topic: "general",
@@ -253,7 +253,7 @@ const exercises = [
   {
     question: "Welches Verkehrsmittel benutzt man für eine Geschäftsreise?",
     type: "multiple_choice",
-    options: ["Fahrrad", "Auto", "Flugzeug", "Bus"],
+    options: JSON.stringify(["Fahrrad", "Auto", "Flugzeug", "Bus"]),
     correct_answer: "Flugzeug",
     difficulty: 0.3,
     topic: "work",
@@ -269,7 +269,7 @@ const exercises = [
   {
     question: "Welches dieser Wörter bedeutet 'Gepäck'?",
     type: "multiple_choice",
-    options: ["Tasche", "Koffer", "Rucksack", "Handschuh"],
+    options: JSON.stringify(["Tasche", "Koffer", "Rucksack", "Handschuh"]),
     correct_answer: "Koffer",
     difficulty: 0.2,
     topic: "travel",
@@ -285,7 +285,7 @@ const exercises = [
   {
     question: "Welches dieser Lebensmittel isst man oft zum Mittagessen?",
     type: "multiple_choice",
-    options: ["Brötchen", "Suppe", "Kaffee", "Tee"],
+    options: JSON.stringify(["Brötchen", "Suppe", "Kaffee", "Tee"]),
     correct_answer: "Suppe",
     difficulty: 0.1,
     topic: "general",
@@ -301,7 +301,7 @@ const exercises = [
   {
     question: "Welches dieser Länder spricht Deutsch als offizielle Sprache?",
     type: "multiple_choice",
-    options: ["Spanien", "Schweiz", "Italien", "Frankreich"],
+    options: JSON.stringify(["Spanien", "Schweiz", "Italien", "Frankreich"]),
     correct_answer: "Schweiz",
     difficulty: 0.4,
     topic: "general",
@@ -317,7 +317,7 @@ const exercises = [
   {
     question: "Welcher dieser Orte ist kein Arbeitsplatz?",
     type: "multiple_choice",
-    options: ["Büro", "Supermarkt", "Schule", "Strand"],
+    options: JSON.stringify(["Büro", "Supermarkt", "Schule", "Strand"]),
     correct_answer: "Strand",
     difficulty: 0.2,
     topic: "work",
@@ -333,7 +333,7 @@ const exercises = [
   {
     question: "Welches dieser Dinge findet man in einem Büro?",
     type: "multiple_choice",
-    options: ["Tafel", "Schreibtisch", "Bett", "Herd"],
+    options: JSON.stringify(["Tafel", "Schreibtisch", "Bett", "Herd"]),
     correct_answer: "Schreibtisch",
     difficulty: 0.2,
     topic: "work",
@@ -349,7 +349,7 @@ const exercises = [
   {
     question: "Welches dieser Wörter bedeutet 'Flugticket'?",
     type: "multiple_choice",
-    options: ["Bordkarte", "Fahrkarte", "Reisepass", "Gepäck"],
+    options: JSON.stringify(["Bordkarte", "Fahrkarte", "Reisepass", "Gepäck"]),
     correct_answer: "Bordkarte",
     difficulty: 0.3,
     topic: "travel",
@@ -365,7 +365,7 @@ const exercises = [
   {
     question: "Welches dieser Getränke ist heiß?",
     type: "multiple_choice",
-    options: ["Wasser", "Kaffee", "Limonade", "Cola"],
+    options: JSON.stringify(["Wasser", "Kaffee", "Limonade", "Cola"]),
     correct_answer: "Kaffee",
     difficulty: 0.1,
     topic: "general",
@@ -381,7 +381,7 @@ const exercises = [
   {
     question: "Welches dieser Wörter beschreibt einen Verkehrsmittel?",
     type: "multiple_choice",
-    options: ["Flughafen", "Taxi", "Hotel", "Restaurant"],
+    options: JSON.stringify(["Flughafen", "Taxi", "Hotel", "Restaurant"]),
     correct_answer: "Taxi",
     difficulty: 0.2,
     topic: "travel",
@@ -397,16 +397,198 @@ const exercises = [
   {
     question: "Welches dieser Dinge gehört nicht zu einem Büro?",
     type: "multiple_choice",
-    options: ["Computer", "Telefon", "Waschmaschine", "Drucker"],
+    options: JSON.stringify(["Computer", "Telefon", "Waschmaschine", "Drucker"]),
     correct_answer: "Waschmaschine",
     difficulty: 0.3,
     topic: "work",
   },
 ];
 
+const medium = [
+  {
+    question: "Welche Fähigkeit ist in einem Büro am wichtigsten?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Tippen", "Klettern", "Schwimmen", "Tanzen"]),
+    correct_answer: "Tippen",
+    difficulty: 0.5,
+    topic: "work"
+  },
+  {
+    question: "Was ist eine gängige Arbeitszeit in Deutschland?",
+    type: "multiple_choice",
+    options: JSON.stringify(["6:00 - 12:00", "8:00 - 17:00", "14:00 - 22:00", "20:00 - 5:00"]),
+    correct_answer: "8:00 - 17:00",
+    difficulty: 0.6,
+    topic: "work"
+  },
+  {
+    question: "Welcher dieser Begriffe beschreibt eine Teamarbeit?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Meeting", "Urlaub", "Pause", "Alleinarbeit"]),
+    correct_answer: "Meeting",
+    difficulty: 0.4,
+    topic: "work"
+  },
+  {
+    question: "Was musst du am Flughafen vor dem Abflug tun?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Einchecken", "Einkaufen", "Koffer öffnen", "Taxi nehmen"]),
+    correct_answer: "Einchecken",
+    difficulty: 0.5,
+    topic: "traveling"
+  },
+  {
+    question: "Welches Dokument brauchst du für eine internationale Reise?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Führerschein", "Personalausweis", "Reisepass", "Bibliotheksausweis"]),
+    correct_answer: "Reisepass",
+    difficulty: 0.7,
+    topic: "traveling"
+  },
+  {
+    question: "Welches Verkehrsmittel ist am schnellsten für lange Strecken?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Zug", "Auto", "Fahrrad", "Flugzeug"]),
+    correct_answer: "Flugzeug",
+    difficulty: 0.6,
+    topic: "traveling"
+  },
+  {
+    question: "Wie begrüßt man einen Freund in Deutschland?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Händeschütteln", "Umarmen", "Küsschen auf die Wange", "Winken"]),
+    correct_answer: "Händeschütteln",
+    difficulty: 0.5,
+    topic: "social_interactions"
+  },
+  {
+    question: "Welche Frage ist eine übliche Vorstellung?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Wie alt bist du?", "Was kostet das?", "Was machst du beruflich?", "Wie ist das Wetter?"]),
+    correct_answer: "Was machst du beruflich?",
+    difficulty: 0.6,
+    topic: "social_interactions"
+  },
+  {
+    question: "Wie verabschiedet man sich höflich in Deutschland?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Ciao", "Auf Wiedersehen", "Servus", "Guten Tag"]),
+    correct_answer: "Auf Wiedersehen",
+    difficulty: 0.4,
+    topic: "social_interactions"
+  },
+  {
+    question: "Was kauft man üblicherweise im Supermarkt?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Kleidung", "Lebensmittel", "Möbel", "Elektronik"]),
+    correct_answer: "Lebensmittel",
+    difficulty: 0.5,
+    topic: "daily_life"
+  },
+  {
+    question: "Welcher dieser Orte gehört nicht zu einem Einkaufszentrum?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Bäckerei", "Bank", "Friseursalon", "Tankstelle"]),
+    correct_answer: "Tankstelle",
+    difficulty: 0.6,
+    topic: "daily_life"
+  },
+  {
+    question: "Wann gehen die meisten Menschen in Deutschland einkaufen?",
+    type: "multiple_choice",
+    options:JSON.stringify(["Sonntags", "Abends nach 22 Uhr", "Unter der Woche bis 20 Uhr", "An Feiertagen"]),
+    correct_answer: "Unter der Woche bis 20 Uhr",
+    difficulty: 0.7,
+    topic: "daily_life"
+  }
+];
+
+const medium2 = [
+  {
+    question: "Welche Kleidung ist am besten für ein Vorstellungsgespräch?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Anzug", "Badehose", "Jogginghose", "Schlafanzug"]),
+    correct_answer: "Anzug",
+    difficulty: 0.5,
+    topic: "work"
+  },
+  {
+    question: "Welche dieser Tätigkeiten gehört zu einem Bürojob?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Telefonieren", "Schweißen", "Kochen", "Malen"]),
+    correct_answer: "Telefonieren",
+    difficulty: 0.6,
+    topic: "work"
+  },
+  {
+    question: "Welcher dieser Begriffe beschreibt eine Beförderung?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Gehaltserhöhung", "Urlaub", "Kündigung", "Teilzeit"]),
+    correct_answer: "Gehaltserhöhung",
+    difficulty: 0.7,
+    topic: "work"
+  },
+  {
+    question: "Was sollte man am Flughafen zuerst tun?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Einchecken", "Gepäck verlieren", "Pass wegwerfen", "Koffer öffnen"]),
+    correct_answer: "Einchecken",
+    difficulty: 0.5,
+    topic: "traveling"
+  },
+  {
+    question: "Welches Verkehrsmittel ist umweltfreundlicher?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Zug", "Auto", "Flugzeug", "Motorrad"]),
+    correct_answer: "Zug",
+    difficulty: 0.6,
+    topic: "traveling"
+  },
+  {
+    question: "Was braucht man, um ein Hotelzimmer zu buchen?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Kreditkarte", "Führerschein", "Tageskarte", "Studentenausweis"]),
+    correct_answer: "Kreditkarte",
+    difficulty: 0.7,
+    topic: "traveling"
+  },
+  {
+    question: "Wie begrüßt man eine neue Person höflich?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Guten Tag", "Tschüss", "Mahlzeit", "Danke"]),
+    correct_answer: "Guten Tag",
+    difficulty: 0.5,
+    topic: "social_interactions"
+  },
+  {
+    question: "Welche dieser Antworten ist eine höfliche Entschuldigung?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Es tut mir leid", "Mir egal", "Mach doch selbst", "Egal"]),
+    correct_answer: "Es tut mir leid",
+    difficulty: 0.6,
+    topic: "social_interactions"
+  },
+  {
+    question: "Welche Geste wird in Deutschland als unhöflich angesehen?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Mittelfinger zeigen", "Lächeln", "Hand geben", "Nicken"]),
+    correct_answer: "Mittelfinger zeigen",
+    difficulty: 0.7,
+    topic: "social_interactions"
+  },
+  {
+    question: "Wo kauft man in Deutschland typischerweise frisches Brot?",
+    type: "multiple_choice",
+    options: JSON.stringify(["Bäckerei", "Tankstelle", "Postamt", "Bibliothek"]),
+    correct_answer: "Bäckerei",
+    difficulty: 0.5,
+    topic: "daily_life"
+  }
+];
+
 const seedExercises = async () => {
   try {
-    await db("exercises").insert(exercises);
+    await db("exercises").insert(medium2);
     console.log("✅ Exercises seeded successfully.");
   } catch (error) {
     console.error("❌ Error inserting exercises:", error);
