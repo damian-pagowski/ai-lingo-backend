@@ -89,6 +89,7 @@ const submitAnswers = async (request, reply) => {
         "exercises.id",
         "=",
         "lesson_exercises.exercise_id"
+      )
       .where("lesson_exercises.lesson_id", lessonId) 
       .select(
         "exercises.id",

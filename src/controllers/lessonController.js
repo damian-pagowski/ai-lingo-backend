@@ -55,33 +55,6 @@ const getLessonById = async (req, reply) => {
   }
 };
 
-const updateLesson = async (request, reply) => {
-  const { id } = request.params;
-  const { title, content, difficulty } = request.body;
-  try {
-    const updatedRows = await db("lessons")
-      .where({ id })
-      .update({ title, content, difficulty });
-    if (!updatedRows) {
-      throw new NotFoundError("Lesson not found");
-    }
-
-    const updatedLesson = {
-      id: parseInt(id),
-      title,
-      content,
-      difficulty,
-    };
-
-    reply.send(updatedLesson);
-  } catch (err) {
-    if (err instanceof NotFoundError) {
-      throw err;
-    }
-    throw new DatabaseError("Failed to update lesson", err.message);
-  }
-};
-
 const deleteLesson = async (request, reply) => {
   const { id } = request.params;
   try {
@@ -95,6 +68,40 @@ const deleteLesson = async (request, reply) => {
       throw err;
     }
     throw new DatabaseError("Failed to delete lesson", err.message);
+  }
+};
+
+const generateInitialLesson = async (req, reply) => {
+  try {
+    const userId = req.user.id;
+
+    const lesson = {
+      title: "Erste Schritte: Begrüßung und Alltag",
+      content:
+        "Willkommen zu deiner ersten Deutschstunde! In dieser Lektion lernst du, wie du dich vorstellen, einfache Fragen stellen und auf alltägliche Gespräche reagieren kannst.",
+      difficulty: "beginner",
+      user_id: userId,
+      created_at: new Date().toISOString(),
+      status: "not_started",
+    };
+
+    const lessonId = await db("lessons").insert(lesson);
+
+    const exercises = Array.from({ length: 10 }, (_, index) => ({
+      lesson_id: lessonId[0],
+      exercise_id: index + 1,
+    }));
+
+    reply.send({
+      lessonId: lessonId[0],
+      title: lesson.title,
+      content: lesson.content,
+      difficulty: lesson.difficulty,
+      status: lesson.status,
+      exercises,
+    });
+  } catch (err) {
+    throw new DatabaseError("Failed to generate Initial lesson", err.message);
   }
 };
 
@@ -302,6 +309,6 @@ module.exports = {
   generateLessonsWithAI,
   getLessons,
   getLessonById,
-  updateLesson,
+  generateInitialLesson,
   deleteLesson,
 };

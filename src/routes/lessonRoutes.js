@@ -1,13 +1,11 @@
 const {
   generateCustomLesson,
   generateLessonsWithAI,
+  generateInitialLesson,
   getLessons,
   getLessonById,
-  updateLesson,
   deleteLesson,
 } = require("../controllers/lessonController");
-const { lessonSchema } = require("../schemas/lessonSchema");
-const validateRequest = require("../middleware/validateRequest");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
 module.exports = async function (fastify) {
@@ -23,22 +21,16 @@ module.exports = async function (fastify) {
     { preHandler: fastify.authenticate },
     generateCustomLesson
   );
+
+  fastify.post(
+    "/create-initial-lesson",
+    { preHandler: fastify.authenticate },
+    generateInitialLesson
+  );
   fastify.post(
     "/create-ai-lesson",
     { preHandler: fastify.authenticate },
     generateLessonsWithAI
-  );
-
-  fastify.put(
-    "/lessons/:id",
-    {
-      preHandler: [
-        fastify.authenticate,
-        authorizeRoles(["admin"]),
-        validateRequest(lessonSchema),
-      ],
-    },
-    updateLesson
   );
   fastify.delete(
     "/lessons/:id",

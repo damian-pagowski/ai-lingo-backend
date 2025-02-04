@@ -14,7 +14,7 @@ const getUserProfile = async (request, reply) => {
             throw new NotFoundError('User not found', { userId });
         }
 
-        let userProfile = await db('user_profiles')
+        const userProfile = await db('user_profiles')
             .select('course_name', 'level', 'progress', 'streak', 'current_lesson_id')
             .where({ user_id: userId })
             .first();
