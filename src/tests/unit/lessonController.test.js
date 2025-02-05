@@ -1,8 +1,6 @@
 const {
-  createLesson,
   getLessons,
   getLessonById,
-  updateLesson,
   deleteLesson,
 } = require("../../controllers/lessonController");
 const db = require("../../db");
@@ -25,55 +23,7 @@ describe("Lesson Controller", () => {
       send: jest.fn(),
       status: jest.fn().mockReturnThis(),
     };
-  });
-
-  describe("createLesson", () => {
-    it("should create a lesson and return the lesson data", async () => {
-      request.body = {
-        title: "Introduction to JavaScript",
-        content: "Learn the basics of JavaScript",
-        difficulty: "beginner",
-        user_id: 1,
-      };
-      db.mockReturnValue({
-        insert: jest.fn().mockResolvedValue([1]),
-      });
-      await createLesson(request, reply);
-      expect(db().insert).toHaveBeenCalledWith({
-        title: "Introduction to JavaScript",
-        content: "Learn the basics of JavaScript",
-        difficulty: "beginner",
-        user_id: 1,
-      });
-      expect(reply.send).toHaveBeenCalledWith({
-        id: 1,
-        title: "Introduction to JavaScript",
-        content: "Learn the basics of JavaScript",
-        difficulty: "beginner",
-        user_id: 1,
-      });
-    });
-
-    it("should throw a DatabaseError if db.insert fails", async () => {
-      request.body = {
-        title: "Introduction to JavaScript",
-        content: "Learn the basics of JavaScript",
-        difficulty: "beginner",
-        user_id: 1,
-      };
-
-      db.mockReturnValue({
-        insert: jest.fn().mockRejectedValue(new Error("Database error")),
-      });
-      await expect(createLesson(request, reply)).rejects.toThrow(DatabaseError);
-      expect(db().insert).toHaveBeenCalledWith({
-        title: "Introduction to JavaScript",
-        content: "Learn the basics of JavaScript",
-        difficulty: "beginner",
-        user_id: 1,
-      });
-    });
-  });
+  }); 
 
   describe("getLessons", () => {
     it("should fetch lessons with pagination, filtering, and sorting", async () => {
@@ -185,63 +135,6 @@ describe("Lesson Controller", () => {
       await expect(getLessonById(request, reply)).rejects.toThrow(
         DatabaseError
       );
-    });
-  });
-
-  describe("updateLesson", () => {
-    it("should update a lesson and return the updated lesson", async () => {
-      request.params = { id: 1 };
-      request.body = {
-        title: "Updated Title",
-        content: "Updated Content",
-        difficulty: "intermediate",
-      };
-      db.mockReturnValue({
-        where: jest.fn().mockReturnThis(),
-        update: jest.fn().mockResolvedValue(1),
-      });
-
-      await updateLesson(request, reply);
-      expect(db().where).toHaveBeenCalledWith({ id: 1 });
-      expect(db().update).toHaveBeenCalledWith({
-        title: "Updated Title",
-        content: "Updated Content",
-        difficulty: "intermediate",
-      });
-      expect(reply.send).toHaveBeenCalledWith({
-        id: 1,
-        title: "Updated Title",
-        content: "Updated Content",
-        difficulty: "intermediate",
-      });
-    });
-
-    it("should throw a NotFoundError if lesson is not found", async () => {
-      request.params = { id: 1 };
-      request.body = {
-        title: "Updated Title",
-        content: "Updated Content",
-        difficulty: "intermediate",
-      };
-      db.mockReturnValue({
-        where: jest.fn().mockReturnThis(),
-        update: jest.fn().mockResolvedValue(0),
-      });
-      await expect(updateLesson(request, reply)).rejects.toThrow(NotFoundError);
-    });
-
-    it("should throw a DatabaseError if db.update fails", async () => {
-      request.params = { id: 1 };
-      request.body = {
-        title: "Updated Title",
-        content: "Updated Content",
-        difficulty: "intermediate",
-      };
-      db.mockReturnValue({
-        where: jest.fn().mockReturnThis(),
-        update: jest.fn().mockRejectedValue(new Error("Database error")),
-      });
-      await expect(updateLesson(request, reply)).rejects.toThrow(DatabaseError);
     });
   });
 

@@ -34,6 +34,7 @@ describe("UserProfile Controller Tests", () => {
             email: "damian@example.com",
             role: "student",
             created_at: "2024-01-01",
+            current_lesson_id: 2,
           })
           .mockResolvedValueOnce({
             course_name: "Spanish for Beginners",
