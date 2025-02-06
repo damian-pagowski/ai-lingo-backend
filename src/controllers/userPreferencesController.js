@@ -49,7 +49,7 @@ const saveUserPreferences = async (request, reply) => {
   try {
     const userId = request.user.id;
 
-    const { level, goals, domains, daily_lesson_commitment } = request.body; // 🔹 Added daily_lesson_commitment
+    const { level, goals, domains, daily_lesson_commitment } = request.body;
     const current_level = mapLevel(level);
     const learning_goal = mapGoals(goals);
     const focus_areas = mapDomains(domains);
@@ -67,7 +67,7 @@ const saveUserPreferences = async (request, reply) => {
           current_level,
           learning_goal: JSON.stringify(learning_goal),
           focus_areas: JSON.stringify(focus_areas),
-          daily_lesson_commitment: daily_lesson_commitment || 1, // 🔹 Ensure default value if not provided
+          daily_lesson_commitment: daily_lesson_commitment || 1,
           updated_at: new Date(),
         });
 
@@ -86,7 +86,7 @@ const saveUserPreferences = async (request, reply) => {
         current_level,
         learning_goal: JSON.stringify(learning_goal),
         focus_areas: JSON.stringify(focus_areas),
-        daily_lesson_commitment: daily_lesson_commitment || 1, // 🔹 Ensure default value if not provided
+        daily_lesson_commitment: daily_lesson_commitment || 1, 
       });
 
       await db("user_profiles").insert({
