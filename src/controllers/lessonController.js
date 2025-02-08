@@ -1,5 +1,6 @@
+const { BadRequestError } = require("openai");
 const db = require("../db");
-const { DatabaseError, NotFoundError } = require("../errors/customErrors");
+const { DatabaseError, NotFoundError, UnauthorizedError } = require("../errors/customErrors");
 const { generateLessonsPrompt } = require("../utils/aiUtils");
 
 const getLessons = async (request, reply) => {
@@ -10,14 +11,23 @@ const getLessons = async (request, reply) => {
     sort = "created_at",
     order = "desc",
   } = request.query;
+  
   try {
-    let query = db("lessons").select("*");
+    const userId = request.user.id;
+
+    let query = db("lessons")
+      .select("*")
+      .where("user_id", userId)
+      .whereNot("status", "flagged");
+
     if (difficulty) {
       query = query.where("difficulty", difficulty);
     }
+
     const offset = (page - 1) * limit;
     query = query.limit(limit).offset(offset);
     query = query.orderBy(sort, order);
+
     const lessons = await query;
     reply.send(lessons);
   } catch (err) {
@@ -40,6 +50,7 @@ const getLessonById = async (req, reply) => {
       .where("lesson_exercises.lesson_id", id)
       .select(
         "exercises.id",
+        "exercises.score",
         "exercises.question",
         "exercises.type",
         "exercises.options",
@@ -304,11 +315,74 @@ const generateLessonsWithAI = async (request, reply) => {
   }
 };
 
+
+const flagLesson = async (request, reply) => {
+  try {
+    const userId = request.user.id;
+    const { lessonId } = request.params;
+
+    const lesson = await db("lessons")
+      .where({ id: lessonId })
+      .first();
+
+    if (!lesson) {
+      throw new NotFoundError("Lesson not found", { lessonId });
+    }
+
+    if (lesson.user_id !== userId) {
+      throw new UnauthorizedError("You do not have permission to flag this lesson");
+    }
+
+    await db("lessons").where({ id: lessonId }).update({
+      status: "flagged",
+    });
+
+    reply.send({ message: "Lesson flagged successfully" });
+  } catch (err) {
+    throw new DatabaseError("Failed to flag lesson", err.message);
+  }
+};
+
+
+const voteExercise = async (request, reply) => {
+  try {
+    const { exerciseId, voteType } = request.body;
+
+    if (!["upvote", "downvote"].includes(voteType)) {
+      throw new BadRequestError("Invalid vote type")
+    }
+
+    const exercise = await db("exercises").where({ id: exerciseId }).first();
+    if (!exercise) {
+      throw new NotFoundError("Exercise not found")
+    }
+
+    const scoreChange = voteType === "upvote" ? 1 : -1;
+
+    await db("exercises")
+      .where({ id: exerciseId })
+      .increment("score", scoreChange);
+
+    const updatedExercise = await db("exercises").where({ id: exerciseId }).first();
+
+    reply.send({
+      message: `Exercise ${voteType}d successfully`,
+      exerciseId: exerciseId,
+      newScore: updatedExercise.score,
+    });
+
+  } catch (err) {
+    throw new DatabaseError("Failed to process vote", err.message);
+  }
+};
+
 module.exports = {
+  flagLesson,
   generateCustomLesson,
   generateLessonsWithAI,
   getLessons,
   getLessonById,
   generateInitialLesson,
   deleteLesson,
+  voteExercise
 };
