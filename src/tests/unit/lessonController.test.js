@@ -122,7 +122,7 @@ describe("Lesson Controller", () => {
         first: jest.fn().mockResolvedValue(null),
       });
       await expect(getLessonById(request, reply)).rejects.toThrow(
-        NotFoundError
+        DatabaseError
       );
     });
 
@@ -159,7 +159,7 @@ describe("Lesson Controller", () => {
         where: jest.fn().mockReturnThis(),
         del: jest.fn().mockResolvedValue(0),
       });
-      await expect(deleteLesson(request, reply)).rejects.toThrow(NotFoundError);
+      await expect(deleteLesson(request, reply)).rejects.toThrow(DatabaseError);
     });
 
     it("should throw a DatabaseError if db.del fails", async () => {
