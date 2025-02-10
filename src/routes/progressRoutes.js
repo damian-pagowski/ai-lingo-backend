@@ -1,6 +1,6 @@
 const {
   submitAnswers,
-  getProgress,
+  getUserProgress,
 } = require("../controllers/progressController");
 const {
   getLessonTracking,
@@ -17,5 +17,9 @@ module.exports = async function (fastify) {
     { preHandler: [fastify.authenticate] },
     submitAnswers
   );
-  fastify.get("/progress", { preHandler: [fastify.authenticate] }, getProgress);
+  fastify.get(
+    "/progress",
+    { preHandler: [fastify.authenticate] },
+    getUserProgress
+  );
 };

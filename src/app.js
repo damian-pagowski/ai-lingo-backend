@@ -8,7 +8,7 @@ const authPlugin = require('./plugins/authPlugin');
 const corsPlugin =  require('./plugins/cors');
 const errorHandler = require('./middleware/errorHandler');
 const userPreferencesRoutes = require('./routes/userPreferencesRoutes');
-
+const dashboardController = require('./routes/dashboardRoutes');
 
 require('dotenv').config();
 // plugins
@@ -22,6 +22,7 @@ fastify.register(lessonRoutes);
 fastify.register(progressRoutes);
 fastify.register(userProfileRoutes);
 fastify.register(userPreferencesRoutes);
+fastify.register(dashboardController);
 
 // middlewares
 fastify.setErrorHandler(errorHandler);

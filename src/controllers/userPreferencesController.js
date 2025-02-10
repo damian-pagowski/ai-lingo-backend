@@ -75,6 +75,7 @@ const saveUserPreferences = async (request, reply) => {
         course_name,
         level: current_level,
         updated_at: new Date(),
+        daily_lesson_commitment
       });
 
       reply

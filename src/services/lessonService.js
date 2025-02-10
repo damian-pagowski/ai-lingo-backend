@@ -88,7 +88,6 @@ const createLesson = async (userId) => {
     )}.`,
     difficulty,
     status: "not_started",
-    created_at: new Date(),
   });
 
   await db("lesson_exercises").insert(
@@ -111,7 +110,6 @@ const generateInitialLesson = async (userId) => {
     content: "Willkommen zu deiner ersten Deutschstunde!",
     difficulty: "beginner",
     user_id: userId,
-    created_at: new Date().toISOString(),
     status: "not_started",
   };
 

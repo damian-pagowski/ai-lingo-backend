@@ -4,7 +4,7 @@ const {
   deleteLesson,
 } = require("../../controllers/lessonController");
 const db = require("../../db");
-const { DatabaseError, NotFoundError } = require("../../errors/customErrors");
+const { DatabaseError } = require("../../errors/customErrors");
 
 jest.mock("../../db");
 

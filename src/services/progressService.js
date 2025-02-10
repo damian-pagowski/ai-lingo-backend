@@ -1,0 +1,56 @@
+const db = require("../db");
+const { NotFoundError, DatabaseError } = require("../errors/customErrors");
+
+const getProgress = async (userId) => {
+  try {
+    const progressRecords = await db("progress")
+      .where({ user_id: userId })
+      .select("overall_score", "topic_progress", "max_topic_score");
+
+    if (!progressRecords.length) {
+      throw new NotFoundError("No progress data found for the user", { userId });
+    }
+
+    let totalScore = 0;
+    let totalLessons = 0;
+    const topicScores = {};
+
+    progressRecords.forEach(({ overall_score, topic_progress, max_topic_score }) => {
+      totalScore += overall_score;
+      totalLessons++;
+
+      const topicData = JSON.parse(topic_progress);
+      const maxTopicData = JSON.parse(max_topic_score);
+
+      for (const [topic, topicScore] of Object.entries(topicData)) {
+        if (!topicScores[topic]) {
+          topicScores[topic] = { total: 0, count: 0, maxTotal: 0 };
+        }
+        topicScores[topic].total += topicScore;
+        topicScores[topic].count++;
+        topicScores[topic].maxTotal += maxTopicData[topic] || 0;
+      }
+    });
+
+    const overallScore = totalLessons ? Math.round(totalScore / totalLessons) : 0;
+
+    const topicAverages = {};
+    for (const [topic, data] of Object.entries(topicScores)) {
+      const percentage = data.maxTotal > 0 ? Math.round((data.total / data.maxTotal) * 100) : 0;
+      topicAverages[topic] = {
+        score: data.total,
+        maxScore: data.maxTotal,
+        percentage,
+      };
+    }
+
+    return { overallScore, topicScores: topicAverages };
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      throw err;
+    }
+    throw new DatabaseError("Failed to fetch user progress", err.message);
+  }
+};
+
+module.exports = { getProgress };
