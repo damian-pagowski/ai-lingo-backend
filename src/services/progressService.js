@@ -79,15 +79,22 @@ const updateStreak = async (userId) => {
     yesterday.setDate(today.getDate() - 1);
 
     let newStreak = 1;
+    let longestStreak = userProfile.longest_streak || 0;
 
     if (lastLessonDate) {
       if (lastLessonDate.toDateString() === yesterday.toDateString()) {
         newStreak = userProfile.current_streak + 1;
       }
+      newStreak = userProfile.current_streak;
+    }
+
+    if (newStreak > longestStreak) {
+      longestStreak = newStreak;
     }
 
     await db("user_profiles").where({ user_id: userId }).update({
       current_streak: newStreak,
+      longest_streak: longestStreak,
       last_completed_date: today,
     });
 
