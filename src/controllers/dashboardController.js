@@ -10,8 +10,10 @@ const getDashboard = async (request, reply) => {
 
     // Fetch user profile and commitment
     const userProfile = await db("user_profiles")
-      .where({ user_id: userId })
-      .first();
+    .join("users", "users.id", "user_profiles.user_id") 
+    .where("user_profiles.user_id", userId)
+    .select("user_profiles.*", "users.name", "users.email") 
+    .first();
 
     if (!userProfile) {
       throw new NotFoundError("User profile not found", { userId });

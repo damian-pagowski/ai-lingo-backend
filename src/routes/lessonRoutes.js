@@ -6,7 +6,6 @@ const {
   getLessonById,
   deleteLesson,
   flagLesson,
-  voteExercise
 } = require("../controllers/lessonController");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
@@ -40,5 +39,4 @@ module.exports = async function (fastify) {
     deleteLesson
   );
   fastify.get("/flag-lesson/:lessonId", { preHandler: [fastify.authenticate] }, flagLesson);
-  fastify.post("/vote-exercise", { preHandler: [fastify.authenticate] }, voteExercise);
 };

@@ -2,13 +2,15 @@ const fastify = require('fastify')({ logger: true });
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const lessonRoutes = require('./routes/lessonRoutes');
+const exerciseRoutes = require('./routes/exerciseRoutes');
+
 const progressRoutes = require('./routes/progressRoutes');
 const userProfileRoutes = require('./routes/userProfileRoutes');
 const authPlugin = require('./plugins/authPlugin');
 const corsPlugin =  require('./plugins/cors');
 const errorHandler = require('./middleware/errorHandler');
 const userPreferencesRoutes = require('./routes/userPreferencesRoutes');
-const dashboardController = require('./routes/dashboardRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 require('dotenv').config();
 // plugins
@@ -22,7 +24,8 @@ fastify.register(lessonRoutes);
 fastify.register(progressRoutes);
 fastify.register(userProfileRoutes);
 fastify.register(userPreferencesRoutes);
-fastify.register(dashboardController);
+fastify.register(dashboardRoutes);
+fastify.register(exerciseRoutes);
 
 // middlewares
 fastify.setErrorHandler(errorHandler);

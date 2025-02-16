@@ -19,6 +19,10 @@ const voteExercise = async (exerciseId, voteType) => {
   return db("exercises").where({ id: exerciseId }).first();
 };
 
+const getExerciseById = (exerciseId) => {
+  return db("exercises").where({ id: exerciseId }).first();
+};
+
 const fetchExercises = async (
   focusAreas,
   difficultyRange,
@@ -32,4 +36,4 @@ const fetchExercises = async (
     .orderByRaw("RANDOM()")
     .limit(limit);
 };
-module.exports = { voteExercise, fetchExercises };
+module.exports = { voteExercise, fetchExercises, getExerciseById };
